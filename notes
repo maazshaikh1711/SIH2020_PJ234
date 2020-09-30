@@ -1,0 +1,33 @@
+yarn heroku local web
+yarn heroku login
+yarn heroku create
+git push heroku master
+
+
+
+heroku  https://git.heroku.com/intense-basin-31392.git (fetch)
+heroku  https://git.heroku.com/intense-basin-31392.git (push)
+
+
+yarn heroku config:set NODE_MODULES_CACHE=false
+
+git push heroku master
+
+
+git push heroku task/deploy:master
+
+
+https://intense-basin-31392.herokuapp.com/
+
+yarn heroku logs --tail
+
+
+yarn heroku ps:scale web=1 
+
+yarn heroku open 
+
+
+
+Bug:
+
+https://stackoverflow.com/questions/41855838/heroku-nodejs-pathing-issue-error-enoent-no-such-file-or-directory
