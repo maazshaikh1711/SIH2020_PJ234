@@ -21,4 +21,4 @@ Deployed Web App Link : http://netw-web-app.herokuapp.com
 ![d](https://user-images.githubusercontent.com/52784177/94514055-daad8e80-023d-11eb-8395-1ef472e2f191.png)
 
 
-I have a different private repository with all commit history, but due to sceurity issue of Google API key, I created this public repository and squashed all the commits into one commit.
+I have a different private repository with all commit history, but due to security issue of Google API key, I created this public repository and squashed all the commits into one commit.
