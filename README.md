@@ -1,8 +1,10 @@
 # PJ234
 
-I have a different private repository with all commit history, but due to security issue of Google API key, I created this public repository and squashed all the commits into one commit.
+# I have a different private repository with all commit history, but due to security issue of Google API key, I created this public repository and squashed all the commits into one commit.
 
-Here is a glimpse of the Mobile App.
+
+
+#Here is a glimpse of the Mobile App.
 
 ![Screenshot (498)](https://user-images.githubusercontent.com/52784177/94481743-d6f61980-01f5-11eb-90b7-46d71ebc10b5.png)
 ![Screenshot (499)](https://user-images.githubusercontent.com/52784177/94481752-db223700-01f5-11eb-9e86-b752afab9744.png)
@@ -12,7 +14,7 @@ Here is a glimpse of the Mobile App.
 
 
 
-Here is a glimpse of the Web App.
+#Here is a glimpse of the Web App.
 Deployed Web App Link : http://netw-web-app.herokuapp.com
 
 
