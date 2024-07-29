@@ -1,7 +1,6 @@
 import streamlit as st 
 import pandas as pd
 import numpy as np
-import math
 import plotly.express as px
 # from streamlit_pandas_profiling import st_profile_report
 # from pandas_profiling import ProfileReport
@@ -11,7 +10,7 @@ import os
 
 #IMP_NOTE:
 #Please modify this accordingly before running (DEPLOYMENT OR DEVELOPMENT)
-environment = "DEPLOYMENT"
+environment = "DEVELOPMENT"
 
 def get_mongo_uri():
     # Check if running in Streamlit Cloud environment
@@ -93,7 +92,9 @@ if dashboard_selectbox=="Data Visualization by State and City":
 
     st.title("Visualization of data by ")
     def load_data():
-        df1 = pd.read_csv("./308.csv")
+        current_dir = os.path.dirname(__file__)
+        file_path = os.path.join(current_dir, "308.csv")
+        df1 = pd.read_csv(file_path)
         df1['mobile_no']=df1['mobile_no'].astype(str) 
         df1['lat']=df1['lat'].astype(float)
         df1['lon']=df1['lon'].astype(float)
