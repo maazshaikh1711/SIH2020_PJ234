@@ -6,15 +6,14 @@ import plotly.express as px
 from streamlit_pandas_profiling import st_profile_report
 # from pandas_profiling import ProfileReport
 import pymongo
-import json
-import datetime
 import pydeck as pdk
+import os
+
+mongo_uri = os.getenv("MONGO_URI")
 
 @st.cache_resource
 def load_data():
-    # DATABASE = "mongodb+srv://username:<password>@cluster0.myavd.mongodb.net/natours?retryWrites=true&w=majority"
-    DATABASE = "mongodb+srv://amaan:amaansk@cluster0.myavd.mongodb.net/natours?retryWrites=true&w=majority"
-    client = pymongo.MongoClient(DATABASE)
+    client = pymongo.MongoClient(mongo_uri)
 
     db = client["natours"]
     mobileusers= db["mobileusers"].find()
@@ -48,8 +47,7 @@ if dashboard_selectbox=="Exploratory Data Analysis Report":
 
     
     # def load_data():
-    #         DATABASE = "mongodb+srv://amaan:amaansk@cluster0-myavd.mongodb.net/natours?retryWrites=true&w=majority"
-    #         client = pymongo.MongoClient(DATABASE)
+    #         client = pymongo.MongoClient(mongo_uri)
 
     #         db = client["natours"]
     #         mobileusers= db["mobileusers"].find()
@@ -151,8 +149,8 @@ if  dashboard_selectbox=="Data Visualization by Mobile Number":
     st.title("Users Complaint Data")
     @st.cache_resource
     def load_data():
-        DATABASE = "mongodb+srv://amaan:amaansk@cluster0.myavd.mongodb.net/natours?retryWrites=true&w=majority"
-        client = pymongo.MongoClient(DATABASE)
+
+        client = pymongo.MongoClient(mongo_uri)
         db = client["natours"]
         complaints_list= db["complaints"].find()
 
