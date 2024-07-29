@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import math
 import plotly.express as px
-from streamlit_pandas_profiling import st_profile_report
+# from streamlit_pandas_profiling import st_profile_report
 # from pandas_profiling import ProfileReport
 import pymongo
 import pydeck as pdk
