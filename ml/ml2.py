@@ -174,7 +174,7 @@ if  dashboard_selectbox=="Data Visualization by Mobile Number":
         complaints_list= db["complaints"].find()
 
         # Filtering out None records and fixing data type issue for mobileNo
-        new_data = [ {**complaint, 'mobileNo': int(complaint['mobileNo'])} for complaint in complaints_list if 'mobileNo' in complaint and complaint['mobileNo'] is not None]
+        new_data = [ {**complaint, 'mobileNo': str(int(complaint['mobileNo']))} for complaint in complaints_list if 'mobileNo' in complaint and complaint['mobileNo'] is not None]
         
         df1 = pd.DataFrame(new_data)
         df1.rename(columns={'mobileNo':'mobile_no','serviceProvider':'Service_provider','lng':'lon'},inplace=True)
@@ -193,11 +193,10 @@ if  dashboard_selectbox=="Data Visualization by Mobile Number":
         st.success("You selected a Mobile No: ")
 
         if x9 != '':
-            x9 = int(x9)
 
             # Filter the data based on the selected mobile number
             st.write("User Data of", x9)
-            mobile_data = data[data.mobile_no == float(x9)]
+            mobile_data = data[data.mobile_no == x9]
             st.write(mobile_data)
             
             data2 = pd.DataFrame({
