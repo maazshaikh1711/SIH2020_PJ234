@@ -9,7 +9,25 @@ import pymongo
 import pydeck as pdk
 import os
 
-mongo_uri = os.getenv("MONGO_URI")
+#IMP_NOTE:
+#Please modify this accordingly before running (DEPLOYMENT OR DEVELOPMENT)
+environment = "DEPLOYMENT"
+
+def get_mongo_uri():
+    # Check if running in Streamlit Cloud environment
+    if environment=="DEPLOYMENT":
+        return st.secrets["MONGO_URI"]
+    elif environment=="DEVELOPMENT":
+        # Fallback to environment variable for local development
+        return os.getenv("MONGO_URI")
+
+# Get the MongoDB URI
+mongo_uri = get_mongo_uri()
+
+if mongo_uri is None:
+    print("MONGO_URI is not set")
+else:
+    print("MONGO_URI is set")
 
 @st.cache_resource
 def load_data():
