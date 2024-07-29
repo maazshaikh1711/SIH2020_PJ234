@@ -212,7 +212,7 @@ if  dashboard_selectbox=="Data Visualization by Mobile Number":
             view_state = pdk.ViewState(
                 latitude=midpoint[0],
                 longitude=midpoint[1],
-                zoom=4
+                zoom=10
             )
 
             # Define the layer
@@ -220,7 +220,7 @@ if  dashboard_selectbox=="Data Visualization by Mobile Number":
                 'ScatterplotLayer',
                 data=data2,
                 get_position='[lon, lat]',  # Adjust according to your data's column names
-                get_radius=1,  # radius in meters
+                get_radius=800,  # radius in meters
                 radius_scale=0.1,
                 radius_min_pixels=1,
                 get_fill_color=[248, 24, 148]
