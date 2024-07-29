@@ -4,69 +4,78 @@ import numpy as np
 import math
 import plotly.express as px
 from streamlit_pandas_profiling import st_profile_report
-from pandas_profiling import ProfileReport
+# from pandas_profiling import ProfileReport
 import pymongo
 import json
 import datetime
+import pydeck as pdk
 
-
+@st.cache_resource
 def load_data():
-            DATABASE = "mongodb+srv://amaan:PwxIIvIMb2tTow3z@cluster0-myavd.mongodb.net/natours?retryWrites=true&w=majority"
-            client = pymongo.MongoClient(DATABASE)
-        
-            db = client["natours"]
-            mobileusers= db["mobileusers"].find()
+    # DATABASE = "mongodb+srv://username:<password>@cluster0.myavd.mongodb.net/natours?retryWrites=true&w=majority"
+    DATABASE = "mongodb+srv://amaan:amaansk@cluster0.myavd.mongodb.net/natours?retryWrites=true&w=majority"
+    client = pymongo.MongoClient(DATABASE)
 
-            data = [userRecord for userRecord in mobileusers  ] 
-            df1= pd.DataFrame(data)
-            st.write(df1)
-            df1.drop(['_id', '__v'], axis=1,inplace=True)
-            df1.rename(columns={'serviceProvider':'Service_provider','lng':'lon','dBm':'signal_strength'},inplace=True)
-            st.write(df1)
-            return df1
+    db = client["natours"]
+    mobileusers= db["mobileusers"].find()
+
+    data = [userRecord for userRecord in mobileusers] 
+    df1= pd.DataFrame(data)
+    # st.write(df1)
+    df1.drop(['_id', '__v'], axis=1,inplace=True)
+    df1.rename(columns={'serviceProvider':'Service_provider','lng':'lon','dBm':'signal_strength'},inplace=True)
+    return df1
 
 data=load_data()
 
 
-
-
-
-
 dashboard_selectbox = st.sidebar.selectbox(
-    "Select an option",
-    ("Home", "Exploratory Data Analysis Report","Data Visualization by filtering state and city","Data Visualization by filtering Mobile Number","Plotting Data of all users","Data Visualization by filtering Service Provider"),key="Dashboard")
+    "Select Page",
+    ("Home", 
+    #  "Exploratory Data Analysis Report",
+     "Data Visualization by State and City",
+     "Data Visualization by Mobile Number",
+     "Plotting Data of all users",
+     "Data Visualization by Service Provider"
+    ),key="Dashboard")
 
 if dashboard_selectbox=="Home":
-    st.header("DATA ANALYTICS AND DATA VISUALIZATION")
-  
 
+    st.header("DATA ANALYTICS AND DATA VISUALIZATION")
+    st.write("Kindly select a page from the dropdown menu on the left side of the screen.")
 
 if dashboard_selectbox=="Exploratory Data Analysis Report":
+
     
-    def load_data():
-            DATABASE = "mongodb+srv://amaan:PwxIIvIMb2tTow3z@cluster0-myavd.mongodb.net/natours?retryWrites=true&w=majority"
-            client = pymongo.MongoClient(DATABASE)
+    # def load_data():
+    #         DATABASE = "mongodb+srv://amaan:amaansk@cluster0-myavd.mongodb.net/natours?retryWrites=true&w=majority"
+    #         client = pymongo.MongoClient(DATABASE)
 
-            db = client["natours"]
-            mobileusers= db["mobileusers"].find()
+    #         db = client["natours"]
+    #         mobileusers= db["mobileusers"].find()
 
-            data = [userRecord for userRecord in mobileusers  ] 
-            df1= pd.DataFrame(data)
-            df1.drop(['_id', '__v'], axis=1,inplace=True)
-            df1.dropna(how='any')
-            df1.rename(columns={'serviceProvider':'Service_provider','lng':'lon','dBm':'signal_strength'},inplace=True)
+    #         data = [userRecord for userRecord in mobileusers  ] 
+    #         df1= pd.DataFrame(data)
+    #         df1.drop(['_id', '__v'], axis=1,inplace=True)
+    #         df1.dropna(how='any')
+    #         df1.rename(columns={'serviceProvider':'Service_provider','lng':'lon','dBm':'signal_strength'},inplace=True)
        
-            df1['lat']=df1['lat'].astype(float)
-            df1['lon']=df1['lon'].astype(float)
-            df1.dropna(inplace=True)
-            return df1
+    #         df1['lat']=df1['lat'].astype(float)
+    #         df1['lon']=df1['lon'].astype(float)
+    #         df1.dropna(inplace=True)
+    #         return df1
             
-    data=load_data()
-    profile=ProfileReport(data)
-    st_profile_report(profile)
+    # data=load_data()
+    # profile=ProfileReport(data)
+    # st_profile_report(profile)
+    pass
 
-if dashboard_selectbox=="Data Visualization by filtering state and city":
-    st.title("Visualization of data by filtering ")
+
+if dashboard_selectbox=="Data Visualization by State and City":
+
+
+
+    st.title("Visualization of data by ")
     def load_data():
         df1 = pd.read_csv("./308.csv")
         df1['mobile_no']=df1['mobile_no'].astype(str) 
@@ -136,97 +145,177 @@ if dashboard_selectbox=="Data Visualization by filtering state and city":
         st.warning("No state selected")
 
 
-if  dashboard_selectbox=="Data Visualization by filtering Mobile Number":
+if  dashboard_selectbox=="Data Visualization by Mobile Number":
+
+
     st.title("Users Complaint Data")
+    @st.cache_resource
     def load_data():
-        DATABASE = "mongodb+srv://amaan:PwxIIvIMb2tTow3z@cluster0-myavd.mongodb.net/natours?retryWrites=true&w=majority"
+        DATABASE = "mongodb+srv://amaan:amaansk@cluster0.myavd.mongodb.net/natours?retryWrites=true&w=majority"
         client = pymongo.MongoClient(DATABASE)
         db = client["natours"]
-        complains= db["complaints"].find()
+        complaints_list= db["complaints"].find()
 
-        data = [userRecord for userRecord in complains ] 
-        df1 = pd.DataFrame(data)
+        # Filtering out None records and fixing data type issue for mobileNo
+        new_data = [ {**complaint, 'mobileNo': int(complaint['mobileNo'])} for complaint in complaints_list if 'mobileNo' in complaint and complaint['mobileNo'] is not None]
+        
+        df1 = pd.DataFrame(new_data)
         df1.rename(columns={'mobileNo':'mobile_no','serviceProvider':'Service_provider','lng':'lon'},inplace=True)
         df1.dropna(how='any',inplace=True)
-        st.write(df1)
+        # st.write(df1)
         return df1
     data=load_data()
-
-
 
     mobile_arr=data.mobile_no.unique()
     emp_arr=['']
     mobile_menu=np.append(emp_arr,mobile_arr)
     mobile_no_selected = st.selectbox('Select one Mobile Number:',mobile_menu,format_func=lambda u: 'Select an option' if u == '' else u,key="Mobile list")
+    
     if mobile_no_selected:
         x9= mobile_no_selected
-        st.success("You selected a mobile_no")
+        st.success("You selected a Mobile No: ")
 
-        st.write("User Data of",x9)
-        mobile_data=data[data.mobile_no==x9]
-        st.write(mobile_data)
+        if x9 != '':
+            x9 = int(x9)
 
-        data2 = pd.DataFrame({
-   
-        'lat' :mobile_data['lat'] ,
-        'lon' :mobile_data['lon'] })
+            # Filter the data based on the selected mobile number
+            st.write("User Data of", x9)
+            mobile_data = data[data.mobile_no == float(x9)]
+            st.write(mobile_data)
+            
+            data2 = pd.DataFrame({
+    
+            'lat' :mobile_data['lat'] ,
+            'lon' :mobile_data['lon'] })
 
-        # Adding code so we can have map default to the center of the data
-        midpoint = (np.average(data2['lat']), np.average(data2['lon']))
+            # Adding code so we can have map default to the center of the data (will give error if data2 is empty)
+            midpoint = (np.average(data2['lat']), np.average(data2['lon']))
 
-        st.deck_gl_chart(
-                    viewport={
-                        'latitude': midpoint[0],
-                        'longitude':  midpoint[1],
-                        'zoom': 4
-                    },
-                    layers=[{
-                        'type': 'ScatterplotLayer',
-                        'data': data2,
-                        'radiusScale': 0.1,
-                        'radiusMinPixels': 1,
-                        'getFillColor': [248, 24, 148],
-                    }]
-                )
+            # Define the view state
+            view_state = pdk.ViewState(
+                latitude=midpoint[0],
+                longitude=midpoint[1],
+                zoom=4
+            )
+
+            # Define the layer
+            layer = pdk.Layer(
+                'ScatterplotLayer',
+                data=data2,
+                get_position='[lon, lat]',  # Adjust according to your data's column names
+                get_radius=1,  # radius in meters
+                radius_scale=0.1,
+                radius_min_pixels=1,
+                get_fill_color=[248, 24, 148]
+            )
+
+            # Create the deck
+            deck = pdk.Deck(
+                layers=[layer],
+                initial_view_state=view_state
+            )
+
+            # Display the deck in Streamlit
+            st.pydeck_chart(deck)
+
+            # st.deck_gl_chart(
+            #             viewport={
+            #                 'latitude': midpoint[0],
+            #                 'longitude':  midpoint[1],
+            #                 'zoom': 4
+            #             },
+            #             layers=[{
+            #                 'type': 'ScatterplotLayer',
+            #                 'data': data2,
+            #                 'radiusScale': 0.1,
+            #                 'radiusMinPixels': 1,
+            #                 'getFillColor': [248, 24, 148],
+            #             }]
+            #         )
 
     else:
         st.warning("No mobile number selected")
 
 
 if dashboard_selectbox=="Plotting Data of all users":
-        st.write(data)
+
+
 
         data2 = pd.DataFrame({'lat' :data['lat'] ,'lon' :data['lon'] })
+        print("###", data2)
+
+        data2.dropna(subset=['lat', 'lon'], inplace=True)
+        print("### DataFrame after dropping NaNs ###")
+        print(data2)
 
         midpoint = (np.average(data2['lat']), np.average(data2['lon']))
+        print("...",midpoint)
 
-        st.deck_gl_chart(
-                    viewport={
-                        'latitude': midpoint[0],
-                        'longitude':  midpoint[1],
-                        'zoom': 4
-                    },
-                    layers=[{
-                        'type': 'ScatterplotLayer',
-                        'data': data2,
-                        'radiusScale': 0.1,
-                        'radiusMinPixels': 1,
-                        'getFillColor': [248, 24, 148],
-                    }]
-                )
-            
-if dashboard_selectbox=="Data Visualization by filtering Service Provider":
+        # Define the view state
+        view_state = pdk.ViewState(
+            latitude=midpoint[0],
+            longitude=midpoint[1],
+            zoom=4
+        )
+
+        # Define the layer
+        layer = pdk.Layer(
+            'ScatterplotLayer',
+            data=data2,
+            get_position='[lon, lat]',  # Adjust according to your data's column names
+            radius_scale=0.1,
+            radius_min_pixels=1,
+            get_fill_color=[248, 24, 148]
+        )
+
+        # Create the deck
+        deck = pdk.Deck(
+            layers=[layer],
+            initial_view_state=view_state
+        )
+
+        # Display the deck in Streamlit
+        st.pydeck_chart(deck)
+
+        st.write(data)
+
+        # st.deck_gl_chart(
+        #             viewport={
+        #                 'latitude': midpoint[0],
+        #                 'longitude':  midpoint[1],
+        #                 'zoom': 4
+        #             },
+        #             layers=[{
+        #                 'type': 'ScatterplotLayer',
+        #                 'data': data2,
+        #                 'radiusScale': 0.1,
+        #                 'radiusMinPixels': 1,
+        #                 'getFillColor': [248, 24, 148],
+        #             }]
+        #         )
+
+           
+if dashboard_selectbox=="Data Visualization by Service Provider":
+
+
     st.title("Data visulization on basis of service provider")
-    st.write(data)
+    # st.write(data)
     #st.write(data['iccid']==89916270171126240541)
 
     service_provider_arr=data.Service_provider.unique()
-    emp_arr=['']
-    service_provider_menu=np.append(emp_arr,service_provider_arr)
-    service_providers_list=list(data['Service_provider'].unique())
-    service_provider_menu=np.append(emp_arr,service_providers_list)
+    print(":::", service_provider_arr)
 
-    service_provider_selected = st.selectbox('Select one TSP:',service_provider_menu, format_func=lambda u: 'Select an option' if u == '' else u,key="TSP overall list")
+    # Convert to pandas Series to handle NaN values and then to a NumPy array
+    service_provider_series = pd.Series(service_provider_arr)
+
+    # Drop NaN values and convert back to a NumPy array
+    clean_service_provider_arr = service_provider_series.dropna().to_numpy()
+    
+    emp_arr=['']
+    service_provider_menu=np.append(emp_arr,clean_service_provider_arr)
+    print("Service Provider Menu:", service_provider_menu)
+
+    service_provider_selected = st.selectbox('Select Service Provider:',service_provider_menu, format_func=lambda u: 'Select an option' if u == '' else u,key="TSP overall list")
     if service_provider_selected:
         spl=service_provider_selected
         dt1=data[data.Service_provider==spl]
@@ -246,20 +335,53 @@ if dashboard_selectbox=="Data Visualization by filtering Service Provider":
         'lon' :dt1['lon'] })
 
 
+        data2.dropna(subset=['lat', 'lon'], inplace=True)
+        print("### DataFrame after dropping NaNs ###")
+        print(data2)
+
         # Adding code so we can have map default to the center of the data
         midpoint = (np.average(data2['lat']), np.average(data2['lon']))
+        print("...",midpoint)
 
-        st.deck_gl_chart(
-                    viewport={
-                        'latitude': midpoint[0],
-                        'longitude':  midpoint[1],
-                        'zoom': 4
-                    },
-                    layers=[{
-                        'type': 'ScatterplotLayer',
-                        'data': data2,
-                        'radiusScale': 0.1,
-                        'radiusMinPixels': 1,
-                        'getFillColor': [248, 24, 148],
-                    }]
-                )
+        # Define the view state
+        view_state = pdk.ViewState(
+            latitude=midpoint[0],
+            longitude=midpoint[1],
+            zoom=4
+        )
+
+        # Define the layer
+        layer = pdk.Layer(
+            'ScatterplotLayer',
+            data=data2,
+            get_position='[lon, lat]',  # Adjust according to your data's column names
+            radius_scale=0.1,
+            radius_min_pixels=1,
+            get_fill_color=[248, 24, 148]
+        )
+
+        # Create the deck
+        deck = pdk.Deck(
+            layers=[layer],
+            initial_view_state=view_state
+        )
+
+        # Display the deck in Streamlit
+        st.pydeck_chart(deck)
+
+        # st.write(data)
+
+        # st.deck_gl_chart(
+        #             viewport={
+        #                 'latitude': midpoint[0],
+        #                 'longitude':  midpoint[1],
+        #                 'zoom': 4
+        #             },
+        #             layers=[{
+        #                 'type': 'ScatterplotLayer',
+        #                 'data': data2,
+        #                 'radiusScale': 0.1,
+        #                 'radiusMinPixels': 1,
+        #                 'getFillColor': [248, 24, 148],
+        #             }]
+        #         )
