@@ -15,8 +15,8 @@
 
 
 #Here is a glimpse of the Web App.
-Deployed Web App Link : http://netw-web-app.herokuapp.com
-
+Deployed Web App Link : https://maaz-telecom.streamlit.app/
+(Note: I had to re-deploy it on streamlit due to changes in Heroku policies.)
 
 ![a](https://user-images.githubusercontent.com/52784177/94514045-d7b29e00-023d-11eb-8ab2-a23b068ede21.png)
 ![b](https://user-images.githubusercontent.com/52784177/94514051-d97c6180-023d-11eb-95da-8a643d84241b.png)
